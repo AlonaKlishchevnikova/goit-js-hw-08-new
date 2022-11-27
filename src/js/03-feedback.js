@@ -1,30 +1,40 @@
 import throttle from 'lodash.throttle';
-
-const LOCALSTORAGE_KEY = 'feedback-form-state';
+const STORAG_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
-const formData = {};
-onFormSubmit();
-form.addEventListener('submit', event => {
-event.preventDefault();
-const formData = new FormData(event.currentTarget);
-console.log(Object.fromEntries(formData));
-form.reset();
-localStorage.setItem(LOCALSTORAGE_KEY, null);
-});
-const inputListener = event => {
-formData[event.target.name] = event.target.value;
-localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));};
-form.addEventListener('input', throttle(inputListener, 500));
-function onFormSubmit() {
-const formDataString = localStorage.getItem(LOCALSTORAGE_KEY);
-if (formDataString) {
-const existingFormData = JSON.parse(formDataString);
-for (const key in existingFormData) {
-if (Object.hasOwnProperty.call(existingFormData, key)) {
-form.elements[key].value = existingFormData[key];
-formData[key] = existingFormData[key];
+const email = document.querySelector('.feedback-form input');
+const message = document.querySelector('.feedback-form textarea');
+GetData();
+form.addEventListener('input', throttle(onForm, 500));
+form.addEventListener('submit', onSubmit);
+function validate() {
+    if (email.value === "") {
+        alert("Вкажіть свою email адресу");
+        return false;
+    }
+    if (message.value === "") {
+        alert("Залишіть свій відгук");
+        return false;
+    }
 }
+function onForm() {
+  const formData = {
+    email: email.value,
+    message: message.value,
+  };
+  localStorage.setItem(STORAG_KEY, JSON.stringify(formData));
 }
+function onSubmit(e) {
+    e.preventDefault();
+    validate();
+  e.currentTarget.reset();
+  console.log(JSON.parse(localStorage.getItem(STORAG_KEY)));
+  localStorage.removeItem(STORAG_KEY);
 }
+function GetData() {
+  let data = JSON.parse(localStorage.getItem(STORAG_KEY));
+  if (data !== null) {
+    email.value = data.email;
+    message.value = data.message;
+  }
 }
-  
+
