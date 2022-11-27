@@ -7,14 +7,12 @@ GetData();
 form.addEventListener('input', throttle(onForm, 500));
 form.addEventListener('submit', onSubmit);
 function validate() {
-    if (email.value == "") {
-        alert("Вкажіть свою email адресу");
+    if (!email.value || !message.value) {
+         e.preventDefault();
+       
         return false;
     }
-    if (message.value == "") {
-        alert("Залишіть свій відгук");
-        return false;
-    }
+   
 }
 function onForm() {
   const formData = {
@@ -24,15 +22,15 @@ function onForm() {
   localStorage.setItem(STORAG_KEY, JSON.stringify(formData));
 }
 function onSubmit(e) {
+     validate();
     e.preventDefault();
-    validate();
   e.currentTarget.reset();
   console.log(JSON.parse(localStorage.getItem(STORAG_KEY)));
   localStorage.removeItem(STORAG_KEY);
 }
 function GetData() {
   let data = JSON.parse(localStorage.getItem(STORAG_KEY));
-  if (data !== null) {
+    if (data !== null) {
     email.value = data.email;
     message.value = data.message;
   }
