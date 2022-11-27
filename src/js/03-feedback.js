@@ -7,11 +7,11 @@ GetData();
 form.addEventListener('input', throttle(onForm, 500));
 form.addEventListener('submit', onSubmit);
 function validate() {
-    if (email.value === "") {
+    if (email.value == "") {
         alert("Вкажіть свою email адресу");
         return false;
     }
-    if (message.value === "") {
+    if (message.value == "") {
         alert("Залишіть свій відгук");
         return false;
     }
